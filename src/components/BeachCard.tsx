@@ -2,6 +2,7 @@
 import React from 'react';
 import { Beach } from '../types/Beach';
 import { Star, Sun, MapPin, Waves, Quote, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface BeachCardProps {
   beach: Beach;
@@ -93,10 +94,13 @@ const BeachCard = ({ beach }: BeachCardProps) => {
         </div>
         
         <div className="flex space-x-2">
-          <button className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200 flex items-center justify-center">
+          <Link 
+            to={beach.planLink} 
+            className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200 flex items-center justify-center"
+          >
             <ExternalLink className="w-4 h-4 mr-2" />
             Plan Visit
-          </button>
+          </Link>
           <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
             <Sun className="w-4 h-4 text-orange-500" />
           </button>
