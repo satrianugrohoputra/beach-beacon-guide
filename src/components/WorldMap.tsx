@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Map } from 'lucide-react';
 import { Beach } from '../types/Beach';
 
 interface WorldMapProps {
