@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Beach } from '../types/Beach';
-import { Star, Sun, MapPin, Waves } from 'lucide-react';
+import { Star, Sun, MapPin, Waves, Quote, ExternalLink } from 'lucide-react';
 
 interface BeachCardProps {
   beach: Beach;
@@ -44,15 +44,19 @@ const BeachCard = ({ beach }: BeachCardProps) => {
               {beach.country}
             </div>
           </div>
-          <div className="flex items-center bg-blue-50 px-2 py-1 rounded-lg text-xs text-blue-600">
-            {getCategoryIcon(beach.category)}
-            <span className="ml-1">{beach.category}</span>
+          <div className="flex flex-wrap gap-1">
+            {beach.categories.map((category) => (
+              <div key={category} className="flex items-center bg-blue-50 px-2 py-1 rounded-lg text-xs text-blue-600">
+                {getCategoryIcon(category)}
+                <span className="ml-1">{category}</span>
+              </div>
+            ))}
           </div>
         </div>
         
         <p className="text-gray-600 text-sm mb-4 italic">{beach.tagline}</p>
         
-        <div className="space-y-3">
+        <div className="space-y-3 mb-4">
           <h4 className="font-semibold text-gray-800">Score Breakdown</h4>
           
           {Object.entries(beach.scores).map(([key, value]) => (
@@ -72,15 +76,33 @@ const BeachCard = ({ beach }: BeachCardProps) => {
             </div>
           ))}
         </div>
+
+        {/* Traveler Stories */}
+        <div className="mb-4">
+          <h4 className="font-semibold text-gray-800 mb-2 flex items-center">
+            <Quote className="w-4 h-4 mr-1" />
+            Traveler Stories
+          </h4>
+          <div className="space-y-2">
+            {beach.stories.map((story, index) => (
+              <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-700 italic">"{story}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
         
-        <div className="mt-6 flex space-x-2">
-          <button className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200">
+        <div className="flex space-x-2">
+          <button className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200 flex items-center justify-center">
+            <ExternalLink className="w-4 h-4 mr-2" />
             Plan Visit
           </button>
           <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
             <Sun className="w-4 h-4 text-orange-500" />
           </button>
         </div>
+        
+        <p className="text-xs text-gray-500 mt-2 text-center">{beach.planText}</p>
       </div>
     </div>
   );

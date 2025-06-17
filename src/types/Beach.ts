@@ -1,6 +1,6 @@
 
 export interface Beach {
-  id: number;
+  id: string;
   name: string;
   country: string;
   coordinates: {
@@ -9,6 +9,7 @@ export interface Beach {
   };
   rating: number;
   category: string;
+  categories: string[];
   image: string;
   tagline: string;
   scores: {
@@ -17,4 +18,7 @@ export interface Beach {
     accessibility: number;
     activities: number;
   };
+  stories: string[];
+  planLink: string;
+  planText: string;
 }
