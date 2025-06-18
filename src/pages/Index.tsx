@@ -1,9 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import BeachCard from '@/components/BeachCard';
 import WorldMap from '@/components/WorldMap';
 import FilterBar from '@/components/FilterBar';
+import HeroSection from '@/components/HeroSection';
+import CTASection from '@/components/CTASection';
+import Footer from '@/components/Footer';
 import { Beach } from '@/types/Beach';
 
 const Index = () => {
@@ -195,7 +197,6 @@ const Index = () => {
     }
   ];
 
-  // Filter beaches based on active filters
   const filteredBeaches = activeFilters.length === 0 
     ? beaches 
     : beaches.filter(beach => 
@@ -206,7 +207,6 @@ const Index = () => {
     console.log('Beach selected:', beach.name);
     setSelectedBeach(beach);
     
-    // Scroll to the beach card in the list
     setTimeout(() => {
       const beachCard = document.getElementById(`beach-${beach.id}`);
       if (beachCard) {
@@ -215,76 +215,94 @@ const Index = () => {
     }, 100);
   };
 
-  // Clear selected beach when filters change and beach is no longer visible
   useEffect(() => {
     if (selectedBeach && !filteredBeaches.some(beach => beach.id === selectedBeach.id)) {
       setSelectedBeach(null);
     }
   }, [filteredBeaches, selectedBeach]);
 
+  const scrollToCategories = () => {
+    const categoriesSection = document.getElementById('categories-section');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
       <Header />
       
-      <main className="pt-20 pb-12">
+      {/* Hero Section */}
+      <HeroSection onExploreClick={scrollToCategories} />
+      
+      <main className="pb-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
-              Discover Your Perfect
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600">
-                Beach Paradise
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Explore the world's most stunning beaches with detailed scores, authentic traveler stories, and AI-powered planning.
-            </p>
-          </div>
-
-          {/* Filter Bar */}
-          <div className="mb-8">
-            <FilterBar 
-              activeFilters={activeFilters}
-              onFilterChange={setActiveFilters}
-            />
-          </div>
-
-          {/* World Map */}
-          <div className="mb-8">
-            <WorldMap 
-              beaches={filteredBeaches}
-              onBeachSelect={handleBeachSelect}
-              selectedBeach={selectedBeach}
-            />
-          </div>
-
-          {/* Beach Cards Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBeaches.map((beach) => (
-              <div 
-                key={beach.id} 
-                id={`beach-${beach.id}`}
-                className={`transition-all duration-300 ${
-                  selectedBeach?.id === beach.id ? 'ring-4 ring-orange-300 rounded-xl' : ''
-                }`}
-              >
-                <BeachCard beach={beach} />
-              </div>
-            ))}
-          </div>
-
-          {filteredBeaches.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">No beaches match your selected filters.</p>
-              <button 
-                onClick={() => setActiveFilters([])}
-                className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Clear Filters
-              </button>
+          {/* Categories Section */}
+          <div id="categories-section" className="pt-16 pb-8">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+                Discover Your Perfect
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600">
+                  Beach Paradise
+                </span>
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Explore the world's most stunning beaches with detailed scores, authentic traveler stories, and AI-powered planning.
+              </p>
             </div>
-          )}
+
+            {/* Filter Bar */}
+            <div className="mb-8">
+              <FilterBar 
+                activeFilters={activeFilters}
+                onFilterChange={setActiveFilters}
+              />
+            </div>
+
+            {/* World Map */}
+            <div className="mb-8">
+              <WorldMap 
+                beaches={filteredBeaches}
+                onBeachSelect={handleBeachSelect}
+                selectedBeach={selectedBeach}
+              />
+            </div>
+
+            {/* Beach Cards Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredBeaches.map((beach) => (
+                <div 
+                  key={beach.id} 
+                  id={`beach-${beach.id}`}
+                  className={`transition-all duration-300 ${
+                    selectedBeach?.id === beach.id ? 'ring-4 ring-orange-300 rounded-xl' : ''
+                  }`}
+                >
+                  <BeachCard beach={beach} />
+                </div>
+              ))}
+            </div>
+
+            {filteredBeaches.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-600 text-lg">No beaches match your selected filters.</p>
+                <button 
+                  onClick={() => setActiveFilters([])}
+                  className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* CTA Section */}
+        <CTASection />
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
