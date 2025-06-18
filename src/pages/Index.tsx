@@ -1,15 +1,24 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import BeachCard from '@/components/BeachCard';
+import WorldMap from '@/components/WorldMap';
+import FilterBar from '@/components/FilterBar';
 import { Beach } from '@/types/Beach';
 
 const Index = () => {
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [selectedBeach, setSelectedBeach] = useState<Beach | null>(null);
+
   const beaches: Beach[] = [
     {
       id: 1,
       name: "Grace Bay Beach",
       country: "Turks and Caicos",
+      coordinates: {
+        lat: 21.7924,
+        lng: -72.2833
+      },
       image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 95,
       categories: ["Luxury Resorts", "Crystal Waters"],
@@ -32,6 +41,10 @@ const Index = () => {
       id: 2,
       name: "Whitehaven Beach",
       country: "Australia",
+      coordinates: {
+        lat: -20.2839,
+        lng: 149.0403
+      },
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 92,
       categories: ["Natural Wonder", "Pristine"],
@@ -54,6 +67,10 @@ const Index = () => {
       id: 3,
       name: "Navagio Beach",
       country: "Greece",
+      coordinates: {
+        lat: 37.8594,
+        lng: 20.6243
+      },
       image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 89,
       categories: ["Hidden Gem", "Adventure"],
@@ -71,8 +88,71 @@ const Index = () => {
       ],
       planLink: "/plan/navagio-beach",
       planText: "Discover Zakynthos island secrets"
+    },
+    {
+      id: 4,
+      name: "Bora Bora Beach",
+      country: "French Polynesia",
+      coordinates: {
+        lat: -16.5004,
+        lng: -151.7415
+      },
+      image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      rating: 94,
+      categories: ["Luxury Resorts", "Family-Friendly"],
+      tagline: "Overwater bungalows meet crystal lagoons",
+      scores: {
+        beauty: 97,
+        accessibility: 75,
+        activities: 90,
+        safety: 92
+      },
+      stories: [
+        "Swimming with tropical fish right from your bungalow",
+        "Sunset views that will take your breath away",
+        "Perfect honeymoon destination with luxury amenities"
+      ],
+      planLink: "/plan/bora-bora",
+      planText: "Plan your tropical paradise getaway"
+    },
+    {
+      id: 5,
+      name: "Maldives Beach",
+      country: "Maldives",
+      coordinates: {
+        lat: 3.2028,
+        lng: 73.2207
+      },
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      rating: 96,
+      categories: ["Luxury Resorts", "Wildlife Spotting"],
+      tagline: "Private islands with unmatched luxury",
+      scores: {
+        beauty: 99,
+        accessibility: 80,
+        activities: 88,
+        safety: 95
+      },
+      stories: [
+        "Swimming with whale sharks and manta rays",
+        "Private beaches with powdery white sand",
+        "Underwater restaurants with panoramic ocean views"
+      ],
+      planLink: "/plan/maldives",
+      planText: "Discover paradise islands"
     }
   ];
+
+  // Filter beaches based on active filters
+  const filteredBeaches = activeFilters.length === 0 
+    ? beaches 
+    : beaches.filter(beach => 
+        beach.categories.some(category => activeFilters.includes(category))
+      );
+
+  const handleBeachSelect = (beach: Beach) => {
+    setSelectedBeach(beach);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
@@ -92,11 +172,41 @@ const Index = () => {
             </p>
           </div>
 
+          {/* Filter Bar */}
+          <div className="mb-8">
+            <FilterBar 
+              activeFilters={activeFilters}
+              onFilterChange={setActiveFilters}
+            />
+          </div>
+
+          {/* World Map */}
+          <div className="mb-8">
+            <WorldMap 
+              beaches={filteredBeaches}
+              onBeachSelect={handleBeachSelect}
+              selectedBeach={selectedBeach}
+            />
+          </div>
+
+          {/* Beach Cards Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {beaches.map((beach) => (
+            {filteredBeaches.map((beach) => (
               <BeachCard key={beach.id} beach={beach} />
             ))}
           </div>
+
+          {filteredBeaches.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg">No beaches match your selected filters.</p>
+              <button 
+                onClick={() => setActiveFilters([])}
+                className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>
