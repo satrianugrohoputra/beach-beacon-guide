@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import BeachCard from '@/components/BeachCard';
 import WorldMap from '@/components/WorldMap';
@@ -21,7 +21,7 @@ const Index = () => {
       },
       image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 95,
-      categories: ["Luxury Resorts", "Crystal Waters"],
+      categories: ["Luxury Resorts", "Crystal Waters", "Family-Friendly", "Romantic"],
       tagline: "Pristine white sand meets turquoise perfection",
       scores: {
         beauty: 98,
@@ -47,7 +47,7 @@ const Index = () => {
       },
       image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 92,
-      categories: ["Natural Wonder", "Pristine"],
+      categories: ["Natural Wonder", "Pristine", "Adventure", "Crystal Waters"],
       tagline: "Silica sand so pure it squeaks beneath your feet",
       scores: {
         beauty: 99,
@@ -73,7 +73,7 @@ const Index = () => {
       },
       image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 89,
-      categories: ["Hidden Gem", "Adventure"],
+      categories: ["Hidden Gem", "Adventure", "Secret Coves", "Snorkeling"],
       tagline: "Dramatic cliffs embrace a secret cove with a legendary shipwreck",
       scores: {
         beauty: 96,
@@ -99,7 +99,7 @@ const Index = () => {
       },
       image: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 94,
-      categories: ["Luxury Resorts", "Family-Friendly"],
+      categories: ["Luxury Resorts", "Family-Friendly", "Private Island", "Romantic", "Snorkeling"],
       tagline: "Overwater bungalows meet crystal lagoons",
       scores: {
         beauty: 97,
@@ -125,7 +125,7 @@ const Index = () => {
       },
       image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
       rating: 96,
-      categories: ["Luxury Resorts", "Wildlife Spotting"],
+      categories: ["Luxury Resorts", "Wildlife Spotting", "Private Island", "Crystal Waters", "Snorkeling"],
       tagline: "Private islands with unmatched luxury",
       scores: {
         beauty: 99,
@@ -140,6 +140,58 @@ const Index = () => {
       ],
       planLink: "/plan/maldives",
       planText: "Discover paradise islands"
+    },
+    {
+      id: 6,
+      name: "Playa Norte",
+      country: "Mexico",
+      coordinates: {
+        lat: 21.2367,
+        lng: -86.7402
+      },
+      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      rating: 88,
+      categories: ["Family-Friendly", "Surf & Waves", "Crystal Waters", "Adventure"],
+      tagline: "Caribbean paradise with pristine white sand",
+      scores: {
+        beauty: 92,
+        accessibility: 85,
+        activities: 90,
+        safety: 88
+      },
+      stories: [
+        "Perfect for families with shallow, calm waters",
+        "Amazing beach clubs with delicious seafood",
+        "Golf cart rides around the island are a must"
+      ],
+      planLink: "/plan/playa-norte",
+      planText: "Explore Isla Mujeres adventures"
+    },
+    {
+      id: 7,
+      name: "Seven Mile Beach",
+      country: "Jamaica",
+      coordinates: {
+        lat: 18.4055,
+        lng: -78.3746
+      },
+      image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      rating: 90,
+      categories: ["Family-Friendly", "Luxury Resorts", "Surf & Waves", "Romantic"],
+      tagline: "Endless stretch of golden sand and reggae vibes",
+      scores: {
+        beauty: 89,
+        accessibility: 90,
+        activities: 94,
+        safety: 85
+      },
+      stories: [
+        "Famous cliff diving at Rick's Cafe nearby",
+        "Live reggae music on the beach every evening",
+        "Some of the most beautiful sunsets in the Caribbean"
+      ],
+      planLink: "/plan/seven-mile-beach",
+      planText: "Experience Jamaican beach culture"
     }
   ];
 
@@ -151,8 +203,24 @@ const Index = () => {
       );
 
   const handleBeachSelect = (beach: Beach) => {
+    console.log('Beach selected:', beach.name);
     setSelectedBeach(beach);
+    
+    // Scroll to the beach card in the list
+    setTimeout(() => {
+      const beachCard = document.getElementById(`beach-${beach.id}`);
+      if (beachCard) {
+        beachCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
   };
+
+  // Clear selected beach when filters change and beach is no longer visible
+  useEffect(() => {
+    if (selectedBeach && !filteredBeaches.some(beach => beach.id === selectedBeach.id)) {
+      setSelectedBeach(null);
+    }
+  }, [filteredBeaches, selectedBeach]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
@@ -192,7 +260,15 @@ const Index = () => {
           {/* Beach Cards Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBeaches.map((beach) => (
-              <BeachCard key={beach.id} beach={beach} />
+              <div 
+                key={beach.id} 
+                id={`beach-${beach.id}`}
+                className={`transition-all duration-300 ${
+                  selectedBeach?.id === beach.id ? 'ring-4 ring-orange-300 rounded-xl' : ''
+                }`}
+              >
+                <BeachCard beach={beach} />
+              </div>
             ))}
           </div>
 

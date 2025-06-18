@@ -13,7 +13,15 @@ const FilterBar = ({ activeFilters, onFilterChange }: FilterBarProps) => {
     'Surf & Waves', 
     'Secret Coves',
     'Luxury Resorts',
-    'Wildlife Spotting'
+    'Wildlife Spotting',
+    'Crystal Waters',
+    'Natural Wonder',
+    'Pristine',
+    'Hidden Gem',
+    'Adventure',
+    'Romantic',
+    'Snorkeling',
+    'Private Island'
   ];
 
   const toggleFilter = (category: string) => {

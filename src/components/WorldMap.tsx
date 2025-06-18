@@ -10,6 +10,11 @@ interface WorldMapProps {
 }
 
 const WorldMap = ({ beaches, onBeachSelect, selectedBeach }: WorldMapProps) => {
+  const handlePinClick = (beach: Beach) => {
+    console.log('Beach selected from map:', beach.name);
+    onBeachSelect(beach);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-6 border-b border-gray-100">
@@ -18,6 +23,13 @@ const WorldMap = ({ beaches, onBeachSelect, selectedBeach }: WorldMapProps) => {
           World Beach Map
         </h2>
         <p className="text-gray-600 mt-1">Click on pins to explore beaches</p>
+        {selectedBeach && (
+          <div className="mt-2 p-2 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-800 font-medium">
+              Selected: {selectedBeach.name}, {selectedBeach.country}
+            </p>
+          </div>
+        )}
       </div>
       
       <div className="relative h-96 bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 overflow-hidden">
@@ -36,31 +48,34 @@ const WorldMap = ({ beaches, onBeachSelect, selectedBeach }: WorldMapProps) => {
         {beaches.map((beach) => {
           const x = ((beach.coordinates.lng + 180) / 360) * 100;
           const y = ((90 - beach.coordinates.lat) / 180) * 100;
+          const isSelected = selectedBeach?.id === beach.id;
           
           return (
-            <button
-              key={beach.id}
-              onClick={() => onBeachSelect(beach)}
-              className={`absolute transform -translate-x-1/2 -translate-y-full transition-all duration-300 hover:scale-110 ${
-                selectedBeach?.id === beach.id ? 'scale-125' : ''
-              }`}
-              style={{ left: `${x}%`, top: `${y}%` }}
-            >
-              <div className={`w-6 h-6 rounded-full border-2 border-white shadow-lg ${
-                selectedBeach?.id === beach.id 
-                  ? 'bg-orange-500' 
-                  : beach.rating >= 95 
-                    ? 'bg-green-500' 
-                    : beach.rating >= 90 
-                      ? 'bg-yellow-500' 
-                      : 'bg-blue-500'
-              }`}>
-                <div className="w-2 h-2 bg-white rounded-full mx-auto mt-1"></div>
-              </div>
-              <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded shadow-md text-xs font-medium whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity">
-                {beach.name}
-              </div>
-            </button>
+            <div key={beach.id} className="absolute" style={{ left: `${x}%`, top: `${y}%` }}>
+              <button
+                onClick={() => handlePinClick(beach)}
+                className={`transform -translate-x-1/2 -translate-y-full transition-all duration-300 hover:scale-110 ${
+                  isSelected ? 'scale-125 z-10' : ''
+                }`}
+              >
+                <div className={`w-6 h-6 rounded-full border-2 border-white shadow-lg ${
+                  isSelected 
+                    ? 'bg-orange-500 ring-4 ring-orange-300' 
+                    : beach.rating >= 95 
+                      ? 'bg-green-500' 
+                      : beach.rating >= 90 
+                        ? 'bg-yellow-500' 
+                        : 'bg-blue-500'
+                }`}>
+                  <div className="w-2 h-2 bg-white rounded-full mx-auto mt-1"></div>
+                </div>
+                <div className={`absolute top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded shadow-md text-xs font-medium whitespace-nowrap transition-opacity z-20 ${
+                  isSelected ? 'opacity-100' : 'opacity-0 hover:opacity-100'
+                }`}>
+                  {beach.name}
+                </div>
+              </button>
+            </div>
           );
         })}
       </div>
@@ -79,6 +94,10 @@ const WorldMap = ({ beaches, onBeachSelect, selectedBeach }: WorldMapProps) => {
             <div className="flex items-center">
               <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
               <span>Great (&lt;90)</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+              <span>Selected</span>
             </div>
           </div>
           <span className="text-gray-600">{beaches.length} beaches shown</span>

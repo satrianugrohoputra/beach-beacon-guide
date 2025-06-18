@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Beach } from '../types/Beach';
-import { Star, Sun, MapPin, Waves, Quote, ExternalLink } from 'lucide-react';
+import { Star, Sun, MapPin, Waves, Quote, ExternalLink, Heart, Shield, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface BeachCardProps {
@@ -15,8 +15,49 @@ const BeachCard = ({ beach }: BeachCardProps) => {
         return <Waves className="w-4 h-4" />;
       case 'Luxury Resorts':
         return <Star className="w-4 h-4" />;
+      case 'Romantic':
+        return <Heart className="w-4 h-4" />;
+      case 'Family-Friendly':
+        return <Shield className="w-4 h-4" />;
+      case 'Hidden Gem':
+        return <Camera className="w-4 h-4" />;
+      case 'Adventure':
+        return <MapPin className="w-4 h-4" />;
       default:
         return <Sun className="w-4 h-4" />;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'Luxury Resorts':
+        return 'bg-purple-50 text-purple-600';
+      case 'Family-Friendly':
+        return 'bg-green-50 text-green-600';
+      case 'Surf & Waves':
+        return 'bg-blue-50 text-blue-600';
+      case 'Romantic':
+        return 'bg-pink-50 text-pink-600';
+      case 'Adventure':
+        return 'bg-orange-50 text-orange-600';
+      case 'Hidden Gem':
+        return 'bg-indigo-50 text-indigo-600';
+      case 'Wildlife Spotting':
+        return 'bg-emerald-50 text-emerald-600';
+      case 'Crystal Waters':
+        return 'bg-cyan-50 text-cyan-600';
+      case 'Natural Wonder':
+        return 'bg-lime-50 text-lime-600';
+      case 'Pristine':
+        return 'bg-teal-50 text-teal-600';
+      case 'Secret Coves':
+        return 'bg-slate-50 text-slate-600';
+      case 'Snorkeling':
+        return 'bg-sky-50 text-sky-600';
+      case 'Private Island':
+        return 'bg-violet-50 text-violet-600';
+      default:
+        return 'bg-gray-50 text-gray-600';
     }
   };
 
@@ -45,14 +86,24 @@ const BeachCard = ({ beach }: BeachCardProps) => {
               {beach.country}
             </div>
           </div>
-          <div className="flex flex-wrap gap-1">
-            {beach.categories.map((category) => (
-              <div key={category} className="flex items-center bg-blue-50 px-2 py-1 rounded-lg text-xs text-blue-600">
-                {getCategoryIcon(category)}
-                <span className="ml-1">{category}</span>
-              </div>
-            ))}
-          </div>
+        </div>
+
+        {/* Categories */}
+        <div className="flex flex-wrap gap-1 mb-4">
+          {beach.categories.slice(0, 4).map((category) => (
+            <div 
+              key={category} 
+              className={`flex items-center px-2 py-1 rounded-lg text-xs ${getCategoryColor(category)}`}
+            >
+              {getCategoryIcon(category)}
+              <span className="ml-1">{category}</span>
+            </div>
+          ))}
+          {beach.categories.length > 4 && (
+            <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg text-xs text-gray-600">
+              +{beach.categories.length - 4} more
+            </div>
+          )}
         </div>
         
         <p className="text-gray-600 text-sm mb-4 italic">{beach.tagline}</p>
