@@ -6,22 +6,32 @@ import { Input } from '@/components/ui/input';
 import { Umbrella, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Header from '@/components/Header';
 
+interface FormData {
+  email: string;
+  password: string;
+}
+
+interface FormErrors {
+  email?: string;
+  password?: string;
+}
+
 const Login = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [authError, setAuthError] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Clear errors when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
     if (authError) {
@@ -29,7 +39,7 @@ const Login = () => {
     }
   };
 
-  const validateField = (name, value) => {
+  const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'email':
         if (!value) return 'Email is required';
@@ -44,20 +54,20 @@ const Login = () => {
     }
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const error = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Validate all fields
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+      const error = validateField(key, formData[key as keyof FormData]);
+      if (error) newErrors[key as keyof FormErrors] = error;
     });
     
     if (Object.keys(newErrors).length > 0) {
@@ -87,7 +97,7 @@ const Login = () => {
     }
   };
 
-  const handleSocialLogin = (provider) => {
+  const handleSocialLogin = (provider: string) => {
     console.log(`Initiating ${provider} OAuth flow`);
     // Implement OAuth flow here
   };
@@ -194,7 +204,7 @@ const Login = () => {
                   onClick={() => handleSocialLogin('Google')}
                   className="w-full border-gray-300 hover:bg-gray-50"
                 >
-                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjYzNiAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDlWMTAuODQ1NUgxMy44NDM2QzEzLjYzNTkgMTEuOTcgMTMuMDAwOSAxMi45MjMgMTIuMDQ3NyAxMy41NjE0VjE1LjgxOTVIMTQuOTU2NEMxNi42NTg5IDE0LjI1MjMgMTcuNjQgMTEuOTQ1NSAxNy42NCA5LjIwNDU1WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNOSAxOEM5IDEzLjQ1IDkgMTggMTguNzcyNyAxOEMxNC40NTQ1IDE4IDEwLjczNjQgMTcuMTkwOSA4LjE4MTgyIDE1LjIzNjRMMTEuMDIwOSAxMy45MzE4QzExLjczNjQgMTMuMzk1NSAxMi42ODY0IDEzLjMwNDUgMTMuOTU0NSAxM0gxNi4zNjM2VjE1LjE5MDlDMTUuNjA5MSAxNi40NzI3IDE0LjY0MDkgMTcuNjM2NCAxMC45NTQ1IDE4SDE2LjM2MzZDMTYuODA5MSAxOCAxNi45NTQ1IDE3LjgxODIgMTcuMzE4MiAxNy41OTA5QzE3LjY4MTggMTcuMzYzNiAxOCAxNy4yNzI3IDE4IDE2Ljk1NDVaIiBmaWxsPSIjNjQzNjU1Ii8+CjxwYXRoIGQ9Ik05IDEzLjcyNzNDNy43NzI3MyAxNC42ODE4IDUuNzI3MjcgMTQuMjM2NCA1LjE4MTgyIDEzLjMxODJDNS40NTQ1NSAxMi4xMzY0IDUuNzI3MjcgMTAuODY4MiA2IDE5LjY4MTgyWiIgZmlsbD0iI0ZCQkMwNCIvPgo8cGF0aCBkPSJNOSA3LjM2MzY0QzEwLjMzNjQgNS45NTQ1NSAxMi4yNzI3IDUuOTU0NTUgMTQuNzI3MyA2Ljc3MjczSDEzLjYzNjRDMTMuNjM2NCAxMC44NjgyIDEzLjYzNjQgMTEuNjgxOCAxMy40NTQ1IDEyLjEzNjRDMTMuNDU0NSAxMy4wNDU1IDEzLjg2MzYgMTMuNzI3MyAxNC40NTQ1IDEzLjY4MThDMTQuNDU0NSA5IDEzLjkwOTEgMTMuNzI3MyAxMi4yNzI3IDEzLjk1NDVaIiBmaWxsPSIjRUE0MzM1Ii8+Cjwvc3ZnPgo=" alt="Google" className="w-4 h-4 mr-2" />
+                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjYzNiAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDlWMTAuODQ1NUgxMy44NDM2QzEzLjYzNTkgMTEuOTcgMTMuMDAwOSAxMi45MjMgMTIuMDQ3NyAxMy41NjE0VjE1LjgxOTVIMTQuOTU2NEMxNi42NTg5IDE0LjI1MjMgMTcuNjQgMTEuOTQ1NSAxNy42NCA5LjIwNDU1WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNOSAxOEM5IDEzLjQ1IDkgMTggMTguNzcyNyAxOEMxNC40NTQ1IDE4IDEwLjczNjQgMTcuMTkwOSA4LjE4MTgyIDE1LjIzNjRMMTEuMDIwOSAxMy45MzE4QzExLjczNjQgMTMuMzk1NSAxMi42ODY0IDEzLjMwNDUgMTMuOTU0NSAxM0gxNi4zNjM2VjE1LjE5MDlDMTUuNjA5MSAxNi40NzI3IDE0LjY0MDkgMTcuNjM2NCAxMC45NTQ1IDE4SDE2LjM2MzZDMTYuODA5MSAxOCAxNi45NTQ1IDE3LjgxODIgMTcuMzE4MiAxNy41OTA5QzE3LjY4MTggMTcuMzYzNiAxOCAxNy4yNzI3IDE4IDE2Ljk1NDVaIiBmaWxsPSIjNjQzNjU1Ii8+CjxwYXRoIGQ9Ik05IDEzLjcyNzNDNy43NzI3MyAxNC42ODE4IDUuNzI3MjcgMTQuMjM2NCA1LjE4MTgyIDEzLjMxODJDNS40NTQ1NSAxMi4xMzY0IDUuNzI3MjcgMTAuODY4MiA2IDkuNjgxODJaIiBmaWxsPSIjRkJCQzA0Ii8+CjxwYXRoIGQ9Ik05IDcuMzYzNjRDMTAuMzM2NCA1Ljk1NDU1IDEyLjI3MjcgNS45NTQ1NSAxNC43MjczIDYuNzcyNzNIMTMuNjM2NEMxMy42MzY0IDEwLjg2ODIgMTMuNjM2NCAxMS42ODE4IDEzLjQ1NDUgMTIuMTM2NEMxMy40NTQ1IDEzLjA0NTUgMTMuODYzNiAxMy43MjczIDE0LjQ1NDUgMTMuNjgxOEMxNC40NTQ1IDkgMTMuOTA5MSAxMy43MjczIDEyLjI3MjcgMTMuOTU0NVoiIGZpbGw9IiNFQTQzMzUiLz4KPC9zdmc+Cg==" alt="Google" className="w-4 h-4 mr-2" />
                   Continue with Google
                 </Button>
                 <Button

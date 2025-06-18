@@ -6,8 +6,35 @@ import { Input } from '@/components/ui/input';
 import { Sun, Eye, EyeOff, Loader2, Check, X } from 'lucide-react';
 import Header from '@/components/Header';
 
+interface FormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  favoriteBeachType: string;
+}
+
+interface FormErrors {
+  fullName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+interface PasswordStrength {
+  strength: number;
+  checks: {
+    length: boolean;
+    uppercase: boolean;
+    lowercase: boolean;
+    number: boolean;
+    special: boolean;
+  };
+  label: string;
+}
+
 const Signup = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullName: '',
     email: '',
     password: '',
@@ -17,7 +44,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [authError, setAuthError] = useState('');
 
   const beachTypes = [
@@ -29,7 +56,7 @@ const Signup = () => {
     'Adventure Sports'
   ];
 
-  const getPasswordStrength = (password) => {
+  const getPasswordStrength = (password: string): PasswordStrength => {
     let strength = 0;
     const checks = {
       length: password.length >= 8,
@@ -50,12 +77,12 @@ const Signup = () => {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Clear errors when user starts typing
-    if (errors[name]) {
+    if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
     if (authError) {
@@ -63,7 +90,7 @@ const Signup = () => {
     }
   };
 
-  const validateField = (name, value) => {
+  const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'fullName':
         if (!value.trim()) return 'Full name is required';
@@ -85,20 +112,20 @@ const Signup = () => {
     }
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const error = validateField(name, value);
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Validate all required fields
-    const newErrors = {};
+    const newErrors: FormErrors = {};
     ['fullName', 'email', 'password', 'confirmPassword'].forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+      const error = validateField(key, formData[key as keyof FormData]);
+      if (error) newErrors[key as keyof FormErrors] = error;
     });
     
     if (Object.keys(newErrors).length > 0) {
@@ -128,7 +155,7 @@ const Signup = () => {
     }
   };
 
-  const handleSocialLogin = (provider) => {
+  const handleSocialLogin = (provider: string) => {
     console.log(`Initiating ${provider} OAuth flow`);
     // Implement OAuth flow here
   };
@@ -242,12 +269,12 @@ const Signup = () => {
                           special: 'Special character'
                         }).map(([key, label]) => (
                           <div key={key} className="flex items-center space-x-1 text-xs">
-                            {passwordStrength.checks[key] ? (
+                            {passwordStrength.checks[key as keyof typeof passwordStrength.checks] ? (
                               <Check className="w-3 h-3 text-green-500" />
                             ) : (
                               <X className="w-3 h-3 text-gray-300" />
                             )}
-                            <span className={passwordStrength.checks[key] ? 'text-green-600' : 'text-gray-500'}>
+                            <span className={passwordStrength.checks[key as keyof typeof passwordStrength.checks] ? 'text-green-600' : 'text-gray-500'}>
                               {label}
                             </span>
                           </div>
@@ -326,7 +353,7 @@ const Signup = () => {
                   onClick={() => handleSocialLogin('Google')}
                   className="w-full border-gray-300 hover:bg-gray-50"
                 >
-                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjYzNiAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDlWMTAuODQ1NUgxMy44NDM2QzEzLjYzNTkgMTEuOTcgMTMuMDAwOSAxMi45MjMgMTIuMDQ3NyAxMy41NjE0VjE1LjgxOTVIMTQuOTU2NEMxNi42NTg5IDE0LjI1MjMgMTcuNjQgMTEuOTQ1NSAxNy42NCA5LjIwNDU1WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNOSAxOEM5IDEzLjQ1IDkgMTggMTguNzcyNyAxOEMxNC40NTQ1IDE4IDEwLjczNjQgMTcuMTkwOSA4LjE4MTgyIDE1LjIzNjRMMTEuMDIwOSAxMy45MzE4QzExLjczNjQgMTMuMzk1NSAxMi42ODY0IDEzLjMwNDUgMTMuOTU0NSAxM0gxNi4zNjM2VjE1LjE5MDlDMTUuNjA5MSAxNi40NzI3IDE0LjY0MDkgMTcuNjM2NCAxMC45NTQ1IDE4SDE2LjM2MzZDMTYuODA5MSAxOCAxNi45NTQ1IDE3LjgxODIgMTcuMzE4MiAxNy41OTA5QzE3LjY4MTggMTcuMzYzNiAxOCAxNy4yNzI3IDE4IDE2Ljk1NDVaIiBmaWxsPSIjNjQzNjU1Ii8+CjxwYXRoIGQ9Ik05IDEzLjcyNzNDNy43NzI3MyAxNC42ODE4IDUuNzI3MjcgMTQuMjM2NCA1LjE4MTgyIDEzLjMxODJDNS40NTQ1NSAxMi4xMzY0IDUuNzI3MjcgMTAuODY4MiA2IDkuNjgxODJaIiBmaWxsPSIjRkJCQzA0Ii8+CjxwYXRoIGQ9Ik05IDcuMzYzNjRDMTAuMzM2NCA1Ljk1NDU1IDEyLjI3MjcgNS45NTQ1NSAxNC43MjczIDYuNzcyNzNIMTMuNjM2NEMxMy42MzY0IDEwLjg2ODIgMTMuNjM2NCAxMS42ODE4IDEzLjQ1NDUgMTIuMTM2NEMxMy40NTQ1IDEzLjA0NTUgMTMuODYzNiAxMy43MjczIDE0LjQ1NDUgMTMuNjgxOEMxNC40NTQ1IDkgMTMuOTA5MSAxMy43MjczIDEyLjI3MjcgMTMuOTU0NVoiIGZpbGw9IiNFQTQzMzUiLz4KPC9zdmc+Cg==" alt="Google" className="w-4 h-4 mr-2" />
+                  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjYzNiAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDlWMTAuODQ1NUgxMy44NDM2QzEzLjYzNTkgMTEuOTcgMTMuMDAwOSAxMi45MjMgMTIuMDQ3NyAxMy41NjE0VjE1LjgxOTVIMTQuOTU2NEMxNi42NTg5IDE0LjI1MjMgMTcuNjQgMTEuOTQ1NSAxNy42NCA5LjIwNDU1WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNOSAxOEM5IDEzLjQ1IDkgMTggMTguNzcyNyAxOEMxNC40NTQ1IDE4IDEwLjczNjQgMTcuMTkwOSA4LjE4MTgyIDE1LjIzNjRMMTEuMDIwOSAxMy45MzE4QzExLjczNjQgMTMuMzk1NSAxMi42ODY0IDEzLjMwNDUgMTMuOTU0NSAxM0gxNi4zNjM2VjE1LjE5MDlDMTUuNjA5MSAxNi40NzI3IDE0LjY0MDkgMTcuNjM2NCAxMC45NTQ1IDE4SDE2LjM2MzZDMTYuODA5MSAxOCAxNi45NTQ1IDE3LjgxODIgMTcuMzE4MiAxNy41OTA5QzE3LjY4MTggMTcuMzYzNiAxOCAxNy4yNzI3IDE4IDE2Ljk1NDVaIiBmaWxsPSIjNjQzNjU1Ii8+CjxwYXRoIGQ9Ik05IDEzLjcyNzNDNy43NzI3MyAxNC42ODE4IDUuNzI3MjcgMTQuMjM2NCA1LjE4MTgyIDEzLjMxODJDNS40NTQ1NSAxMi4xMzY0IDUuNzI3MjcgMTAuODY4MiA2IDkuNjgxODJaIiBmaWxsPSIjRkJCQzA0Ii8+CjxwYXRoIGQ9Ik05IDcuMzYzNjRDMTAuMzM2NCA1Ljk1NDU1IDEyLjI3MjcgNS45NTQ1NSAxNC43MjczIDYuNzcyNzNIMTMuNjM2NEMxMy42MzY0IDEwLjg2ODIgMTMuNjM2NCAxMS42ODE4IDEzLjQ1NDUgMTIuMTM2NEMxMy40NTQ1IDEzLjA0NTUgMTMuODYzNiAxMy43MjczIDE0LjQ1NDUgMTMuNjgxOEMxNC40NTQ1IDkgMTMuOTA5MSAxMy43MjczIDEyLjI7MjcgMTMuOTU0NVoiIGZpbGw9IiNFQTQzMzUiLz4KPC9zdmc+Cg==" alt="Google" className="w-4 h-4 mr-2" />
                   Continue with Google
                 </Button>
                 <Button

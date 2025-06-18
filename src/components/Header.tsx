@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Sun, Map, Search, Menu, X, User, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -9,6 +9,7 @@ const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // This will be replaced with actual auth state
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const location = useLocation();
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,14 +17,18 @@ const Header = () => {
     };
 
     const throttledScroll = () => {
-      clearTimeout(window.scrollTimeout);
-      window.scrollTimeout = setTimeout(handleScroll, 100);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = setTimeout(handleScroll, 100);
     };
 
     window.addEventListener('scroll', throttledScroll);
     return () => {
       window.removeEventListener('scroll', throttledScroll);
-      clearTimeout(window.scrollTimeout);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
   }, []);
 
