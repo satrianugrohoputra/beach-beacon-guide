@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Custom404Page from "./pages/Custom404Page";
 import PlanGraceBay from "./pages/PlanGraceBay";
 import PlanWhitehavenBeach from "./pages/PlanWhitehavenBeach";
 import PlanNavagioBeach from "./pages/PlanNavagioBeach";
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
+          <Route path="/404" element={<Custom404Page />} />
           <Route path="/plan/grace-bay" element={<PlanGraceBay />} />
           <Route path="/plan/whitehaven-beach" element={<PlanWhitehavenBeach />} />
           <Route path="/plan/navagio-beach" element={<PlanNavagioBeach />} />
