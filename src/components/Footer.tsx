@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Youtube } from 'lucide-react';
+import { Instagram, Youtube, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -49,7 +49,15 @@ const Footer = () => {
             <h3 className="text-lg font-bold text-gray-800 mb-4">Follow Us</h3>
             <div className="flex space-x-4">
               <a 
-                href="https://instagram.com" 
+                href="https://www.linkedin.com/in/satrianugrohoputra" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-[#1ABC9C] transition-colors"
+              >
+                <Linkedin className="w-6 h-6" />
+              </a>
+              <a 
+                href="https://www.instagram.com/satrianugroho.p?igsh=b2xqbG15bmhsOGhn" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-[#1ABC9C] transition-colors"
@@ -57,7 +65,7 @@ const Footer = () => {
                 <Instagram className="w-6 h-6" />
               </a>
               <a 
-                href="https://youtube.com" 
+                href="https://youtube.com/@satrian.p8372?si=9XgDpNToQw5Fzd73" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-[#1ABC9C] transition-colors"
@@ -74,14 +82,14 @@ const Footer = () => {
               <p className="text-sm text-gray-600">
                 <strong>Email:</strong>{" "}
                 <a 
-                  href="mailto:support@beachguide.app" 
+                  href="mailto:satria@gmail.com" 
                   className="hover:text-[#1ABC9C] transition-colors"
                 >
-                  support@beachguide.app
+                  satria@gmail.com
                 </a>
               </p>
               <p className="text-sm text-gray-600">
-                Copyright © 2025 Beach Guide
+                Copyright © 2025 Satria N.P
               </p>
             </div>
           </div>
