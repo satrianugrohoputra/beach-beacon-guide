@@ -13,6 +13,7 @@ import PlanNavagioBeach from "./pages/PlanNavagioBeach";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import About from "./pages/About";
+import Team from "./pages/Team";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
+          <Route path="/team/:slug" element={<Team />} />
           <Route path="/404" element={<Custom404Page />} />
           <Route path="/plan/grace-bay" element={<PlanGraceBay />} />
           <Route path="/plan/whitehaven-beach" element={<PlanWhitehavenBeach />} />
