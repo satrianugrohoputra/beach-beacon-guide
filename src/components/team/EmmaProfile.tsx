@@ -7,7 +7,7 @@ const EmmaProfile = () => {
   const expertise = ['Travel Writing', 'Cultural Research', 'Photography', 'Local Guides'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
       <Header />
       
       <div className="pt-20">
@@ -37,14 +37,14 @@ const EmmaProfile = () => {
             </div>
 
             {/* Bio Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-              <h2 className="text-3xl font-bold text-[#006994] mb-6">About Emma</h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
+              <h2 className="text-3xl font-bold text-[#006994] dark:text-blue-400 mb-6">About Emma</h2>
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                 Emma is a former travel journalist with over 8 years of experience discovering 
                 hidden gems and immersing herself in local cultures around the world. She specializes 
                 in finding authentic beach experiences that go beyond the typical tourist destinations.
               </p>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                 Her passion for storytelling and deep cultural understanding helps Beach Guide 
                 users discover not just beautiful beaches, but the rich stories and communities 
                 that make each destination unique.
@@ -52,13 +52,13 @@ const EmmaProfile = () => {
             </div>
 
             {/* Expertise Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-              <h2 className="text-3xl font-bold text-[#006994] mb-6">Areas of Expertise</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
+              <h2 className="text-3xl font-bold text-[#006994] dark:text-blue-400 mb-6">Areas of Expertise</h2>
               <div className="flex flex-wrap gap-4">
                 {expertise.map((skill, index) => (
                   <span
                     key={index}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full font-medium text-lg border border-purple-200"
+                    className="px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 text-purple-700 dark:text-purple-300 rounded-full font-medium text-lg border border-purple-200 dark:border-purple-700"
                   >
                     {skill}
                   </span>
@@ -67,15 +67,15 @@ const EmmaProfile = () => {
             </div>
 
             {/* Contact Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h2 className="text-3xl font-bold text-[#006994] mb-6">Connect With Emma</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
+              <h2 className="text-3xl font-bold text-[#006994] dark:text-blue-400 mb-6">Connect With Emma</h2>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
                   href="mailto:emma@beachguide.com"
-                  className="flex items-center gap-3 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors group"
+                  className="flex items-center gap-3 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors group"
                 >
-                  <Mail className="w-6 h-6 text-gray-600 group-hover:text-[#1ABC9C]" />
-                  <span className="font-medium text-gray-700 group-hover:text-[#1ABC9C]">
+                  <Mail className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-[#1ABC9C]" />
+                  <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#1ABC9C]">
                     emma@beachguide.com
                   </span>
                 </a>
@@ -83,10 +83,10 @@ const EmmaProfile = () => {
                   href="https://emmachen.travel"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors group"
+                  className="flex items-center gap-3 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors group"
                 >
-                  <Globe className="w-6 h-6 text-gray-600 group-hover:text-[#1ABC9C]" />
-                  <span className="font-medium text-gray-700 group-hover:text-[#1ABC9C]">
+                  <Globe className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-[#1ABC9C]" />
+                  <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#1ABC9C]">
                     Travel Blog
                   </span>
                 </a>

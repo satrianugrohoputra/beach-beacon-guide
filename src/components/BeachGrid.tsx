@@ -13,10 +13,10 @@ const BeachGrid = ({ beaches, selectedBeach, onClearFilters }: BeachGridProps) =
   if (beaches.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 text-lg">No beaches match your selected filters.</p>
+        <p className="text-gray-600 dark:text-gray-300 text-lg">No beaches match your selected filters.</p>
         <button 
           onClick={onClearFilters}
-          className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg transition-colors"
         >
           Clear Filters
         </button>
@@ -31,7 +31,7 @@ const BeachGrid = ({ beaches, selectedBeach, onClearFilters }: BeachGridProps) =
           key={beach.id} 
           id={`beach-${beach.id}`}
           className={`transition-all duration-300 ${
-            selectedBeach?.id === beach.id ? 'ring-4 ring-orange-300 rounded-xl' : ''
+            selectedBeach?.id === beach.id ? 'ring-4 ring-orange-300 dark:ring-orange-500 rounded-xl' : ''
           }`}
         >
           <BeachCard beach={beach} />

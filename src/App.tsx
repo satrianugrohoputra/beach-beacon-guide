@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ThemeToggle from "@/components/ThemeToggle";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Custom404Page from "./pages/Custom404Page";
@@ -36,6 +37,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ThemeToggle />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

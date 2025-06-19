@@ -41,13 +41,13 @@ const BeachesSection = () => {
   return (
     <div id="categories-section" className="pt-16 pb-8">
       <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+        <h2 className="text-4xl md:text-6xl font-bold text-gray-800 dark:text-white mb-4">
           Discover Your Perfect
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600 dark:from-blue-400 dark:to-teal-400">
             Beach Paradise
           </span>
         </h2>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Explore the world's most stunning beaches with detailed scores, authentic traveler stories, and AI-powered planning.
         </p>
       </div>
