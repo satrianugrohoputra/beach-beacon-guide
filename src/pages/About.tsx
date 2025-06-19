@@ -1,27 +1,31 @@
 
 import React from 'react';
 import { Mail, MapPin, Heart, Users, Target, Waves } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 
 const About = () => {
   const teamMembers = [
     {
-      name: 'Miguel Rodriguez',
-      role: 'Lead Developer',
+      name: 'Satria Nugroho P',
+      role: 'Full-Stack Web Developer',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      bio: 'Full-stack developer passionate about creating seamless user experiences.'
+      bio: 'Full-stack developer passionate about creating seamless user experiences.',
+      slug: 'satria-nugroho-p'
     },
     {
       name: 'Emma Chen',
       role: 'Travel Content Curator',
       image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-      bio: 'Former travel journalist with expertise in hidden gems and local culture.'
+      bio: 'Former travel journalist with expertise in hidden gems and local culture.',
+      slug: 'emma-chen'
     },
     {
       name: 'Alex Thompson',
       role: 'Community Manager',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      bio: 'Community builder focused on connecting beach lovers worldwide.'
+      bio: 'Community builder focused on connecting beach lovers worldwide.',
+      slug: 'alex-thompson'
     }
   ];
 
@@ -113,17 +117,21 @@ const About = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
               {teamMembers.map((member, index) => (
                 <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="aspect-square">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <Link to={`/team/${member.slug}`} className="block">
+                    <div className="aspect-square">
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  </Link>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-1">
-                      {member.name}
-                    </h3>
+                    <Link to={`/team/${member.slug}`} className="block">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-1 hover:underline hover:decoration-[#1ABC9C] transition-all">
+                        {member.name}
+                      </h3>
+                    </Link>
                     <p className="text-blue-600 font-medium mb-3">
                       {member.role}
                     </p>
