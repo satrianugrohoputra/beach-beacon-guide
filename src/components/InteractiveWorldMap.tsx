@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -38,12 +37,12 @@ const InteractiveWorldMap = ({ beaches, onBeachSelect, selectedBeach }: Interact
 
     mapboxgl.accessToken = mapboxToken;
 
-    // Custom map style
+    // Custom map style with proper typing
     const mapStyle = {
-      version: 8,
+      version: 8 as const,
       sources: {
         'raster-tiles': {
-          type: 'raster',
+          type: 'raster' as const,
           tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           tileSize: 256,
           attribution: '© OpenStreetMap contributors'
@@ -52,14 +51,14 @@ const InteractiveWorldMap = ({ beaches, onBeachSelect, selectedBeach }: Interact
       layers: [
         {
           id: 'background',
-          type: 'background',
+          type: 'background' as const,
           paint: {
             'background-color': '#D0F0F8' // Water color
           }
         },
         {
           id: 'raster-layer',
-          type: 'raster',
+          type: 'raster' as const,
           source: 'raster-tiles',
           paint: {
             'raster-opacity': 0.7
