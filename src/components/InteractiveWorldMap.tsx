@@ -37,12 +37,12 @@ const InteractiveWorldMap = ({ beaches, onBeachSelect, selectedBeach }: Interact
 
     mapboxgl.accessToken = mapboxToken;
 
-    // Custom map style with proper typing
-    const mapStyle = {
-      version: 8 as const,
+    // Custom map style with proper TypeScript compatibility
+    const mapStyle: mapboxgl.Style = {
+      version: 8,
       sources: {
         'raster-tiles': {
-          type: 'raster' as const,
+          type: 'raster',
           tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
           tileSize: 256,
           attribution: '© OpenStreetMap contributors'
@@ -51,14 +51,14 @@ const InteractiveWorldMap = ({ beaches, onBeachSelect, selectedBeach }: Interact
       layers: [
         {
           id: 'background',
-          type: 'background' as const,
+          type: 'background',
           paint: {
-            'background-color': '#D0F0F8' // Water color
+            'background-color': '#D0F0F8'
           }
         },
         {
           id: 'raster-layer',
-          type: 'raster' as const,
+          type: 'raster',
           source: 'raster-tiles',
           paint: {
             'raster-opacity': 0.7
