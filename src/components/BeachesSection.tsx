@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import FilterBar from '@/components/FilterBar';
-import InteractiveWorldMap from '@/components/InteractiveWorldMap';
+import StaticWorldMap from '@/components/StaticWorldMap';
 import BeachGrid from '@/components/BeachGrid';
 import { Beach } from '@/types/Beach';
 import { beaches } from '@/data/beaches';
@@ -60,9 +60,9 @@ const BeachesSection = () => {
         />
       </div>
 
-      {/* Interactive World Map */}
+      {/* Static World Map */}
       <div className="mb-8">
-        <InteractiveWorldMap 
+        <StaticWorldMap 
           beaches={filteredBeaches}
           onBeachSelect={handleBeachSelect}
           selectedBeach={selectedBeach}
