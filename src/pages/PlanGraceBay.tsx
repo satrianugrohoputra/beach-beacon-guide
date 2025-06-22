@@ -1,14 +1,71 @@
-
-import React from 'react';
-import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { usePlanContext } from '@/contexts/PlanContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import AuthModal from '@/components/AuthModal';
+import ToursDrawer from '@/components/ToursDrawer';
 
 const PlanGraceBay = () => {
-  const addToPlan = (slug: string) => {
-    console.log(`Adding ${slug} to travel plan`);
-    // Future implementation for saving to user's travel plan
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isToursDrawerOpen, setIsToursDrawerOpen] = useState(false);
+  const { addToPlan, removeFromPlan, isInPlan } = usePlanContext();
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const beachSlug = 'grace-bay';
+  const beachName = 'Grace Bay Beach';
+  const isPlanned = isInPlan(beachSlug);
+
+  const activities = [
+    {
+      id: '1',
+      name: 'Morning Snorkel Safari',
+      duration: '3 hours',
+      price: 75,
+      description: 'Explore Smith\'s Reef with professional guides. All snorkeling gear included, plus underwater photography tips.',
+      bookingUrl: 'https://example.com/book-snorkel'
+    },
+    {
+      id: '2',
+      name: 'Sunset Boat Cruise',
+      duration: '2 hours',
+      price: 60,
+      description: 'Romantic sunset sailing with complimentary rum punch and local appetizers. Perfect for couples and photographers.',
+      bookingUrl: 'https://example.com/book-sunset'
+    },
+    {
+      id: '3',
+      name: 'Island Mangrove Kayak',
+      duration: 'Half day',
+      price: 85,
+      description: 'Paddle through pristine mangrove channels with expert naturalist guide. Wildlife spotting and eco-education included.',
+      bookingUrl: 'https://example.com/book-kayak'
+    }
+  ];
+
+  const handlePlanToggle = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    if (isPlanned) {
+      removeFromPlan(beachSlug);
+      toast({
+        title: "Removed from your plan",
+        description: `${beachName} has been removed from your travel plan.`,
+      });
+    } else {
+      addToPlan(beachSlug);
+      toast({
+        title: "Ready! Grace Bay added to your plan.",
+        description: "Start planning your perfect beach getaway.",
+      });
+    }
   };
 
   return (
@@ -50,6 +107,7 @@ const PlanGraceBay = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* ... keep existing code (how to get there content) */}
                 <p>
                   Your journey to paradise begins at <strong>Providenciales International Airport (PLS)</strong>, served by major carriers including American Airlines, Delta, United, and British Airways with direct flights from New York, Miami, London, and Toronto. The airport sits just 15 minutes from Grace Bay, making it one of the most accessible world-class beaches you'll ever visit.
                 </p>
@@ -228,13 +286,31 @@ const PlanGraceBay = () => {
                 </div>
 
                 <Button 
-                  onClick={() => addToPlan('/plan/grace-bay')}
-                  className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
+                  onClick={handlePlanToggle}
+                  variant={isPlanned ? "default" : "outline"}
+                  className={`w-full ${isPlanned 
+                    ? 'bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white' 
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
                 >
-                  Add to My Plan
+                  {isPlanned ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Added
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add to My Plan
+                    </>
+                  )}
                 </Button>
                 
-                <Button variant="outline" className="w-full">
+                <Button 
+                  onClick={() => setIsToursDrawerOpen(true)}
+                  variant="outline" 
+                  className="w-full"
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Book Tours & Activities
                 </Button>
@@ -279,6 +355,19 @@ const PlanGraceBay = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals and Drawers */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+      
+      <ToursDrawer
+        isOpen={isToursDrawerOpen}
+        onClose={() => setIsToursDrawerOpen(false)}
+        beachName={beachName}
+        activities={activities}
+      />
     </div>
   );
 };
