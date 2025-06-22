@@ -67,11 +67,12 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     }
 
     const coords = coordsToSVG(beach.coordinates.lat, beach.coordinates.lng);
-    // Calculate position relative to the container
+    // Calculate position relative to the container with better positioning
     const x = (coords.x / 800) * svgRect.width + (svgRect.left - containerRect.left);
-    const y = (coords.y / 400) * svgRect.height + (svgRect.top - containerRect.top) - 20;
+    const y = (coords.y / 400) * svgRect.height + (svgRect.top - containerRect.top) - 60; // Move popup higher
 
     console.log('Setting popup position:', { x, y });
+    console.log('Beach name being displayed:', beach.name);
     
     setActivePopup({
       beach,
@@ -80,6 +81,22 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     
     // Call the beach selection handler
     onBeachSelect(beach);
+    
+    // Enhanced scrolling with better timing
+    setTimeout(() => {
+      const beachCard = document.getElementById(`beach-${beach.id}`);
+      console.log('Attempting to scroll to beach card:', `beach-${beach.id}`, beachCard);
+      if (beachCard) {
+        beachCard.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+        console.log('Scrolled to beach card for:', beach.name);
+      } else {
+        console.log('Beach card not found for:', beach.name);
+      }
+    }, 200);
   };
 
   const handlePinKeyDown = (beach: Beach, event: React.KeyboardEvent) => {
@@ -94,7 +111,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
           beach,
           position: { 
             x: rect.left - containerRect.left + rect.width / 2, 
-            y: rect.top - containerRect.top - 20 
+            y: rect.top - containerRect.top - 60 
           }
         });
         onBeachSelect(beach);
@@ -218,7 +235,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
                   <circle
                     cx={coords.x}
                     cy={coords.y}
-                    r="12"
+                    r="15"
                     fill="none"
                     stroke="#f97316"
                     strokeWidth="3"
@@ -226,14 +243,15 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
                     opacity="0.6"
                   />
                 )}
+                {/* Enhanced pin with larger size */}
                 <circle
                   cx={coords.x}
                   cy={coords.y}
-                  r="8"
+                  r="10"
                   fill={getPinColor(beach)}
                   stroke="white"
-                  strokeWidth="2"
-                  className="cursor-pointer hover:scale-125 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  strokeWidth="3"
+                  className="cursor-pointer hover:scale-125 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 drop-shadow-lg"
                   tabIndex={0}
                   role="button"
                   aria-label={`${beach.name}, rating ${beach.rating}`}
@@ -242,10 +260,10 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
                 />
                 <text
                   x={coords.x}
-                  y={coords.y + 2}
+                  y={coords.y + 3}
                   textAnchor="middle"
-                  className="text-xs fill-white font-medium pointer-events-none"
-                  style={{ fontSize: '10px' }}
+                  className="text-sm fill-white font-bold pointer-events-none drop-shadow-sm"
+                  style={{ fontSize: '12px' }}
                 >
                   🏖️
                 </text>
@@ -254,53 +272,53 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
           })}
         </svg>
         
-        {/* Popup */}
+        {/* Enhanced Popup with better styling */}
         {activePopup.beach && (
           <div
-            className="absolute z-50 bg-white dark:bg-gray-700 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 p-4 min-w-[220px] max-w-[300px]"
+            className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-2 border-blue-200 dark:border-blue-600 p-5 min-w-[280px] max-w-[320px] transform -translate-x-1/2"
             style={{
               left: `${activePopup.position.x}px`,
               top: `${activePopup.position.y}px`,
-              transform: 'translateX(-50%)'
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={closePopup}
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1"
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               aria-label="Close popup"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
             
-            <h3 className="font-semibold text-lg text-gray-800 dark:text-white mb-1 pr-6">
+            {/* Beach Name - Made more prominent */}
+            <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-2 pr-8 leading-tight">
               {activePopup.beach.name}
             </h3>
             
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            <p className="text-base text-gray-700 dark:text-gray-300 mb-3 flex items-center font-medium">
               📍 {activePopup.beach.country}
             </p>
             
-            <div className="flex items-center mb-3">
-              <div className="flex text-yellow-400 mr-2">
+            <div className="flex items-center mb-4">
+              <div className="flex text-yellow-400 mr-3">
                 {'★'.repeat(Math.floor(activePopup.beach.rating / 20))}
                 {'☆'.repeat(5 - Math.floor(activePopup.beach.rating / 20))}
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-base font-bold text-gray-800 dark:text-gray-200">
                 {activePopup.beach.rating}/100
               </span>
             </div>
             
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3 italic">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 italic leading-relaxed">
               {activePopup.beach.tagline}
             </p>
             
             <a
               href={activePopup.beach.planLink}
-              className="inline-block bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm transition-colors w-full text-center"
+              className="inline-block bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 dark:from-blue-600 dark:to-teal-700 dark:hover:from-blue-700 dark:hover:to-teal-800 text-white px-5 py-3 rounded-lg text-sm font-medium transition-all duration-200 w-full text-center shadow-lg"
               onClick={(e) => e.stopPropagation()}
             >
-              {activePopup.beach.planText || 'Plan Visit'}
+              {activePopup.beach.planText || 'Plan Visit'} ✈️
             </a>
           </div>
         )}
