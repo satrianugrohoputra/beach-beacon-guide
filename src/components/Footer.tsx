@@ -2,10 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, Linkedin } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#FFFFF0] border-t border-gray-300">
+    <footer className="bg-[#FFFFF0] border-t border-gray-300 relative">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Us */}
@@ -102,6 +103,9 @@ const Footer = () => {
           </p>
         </div>
       </div>
+
+      {/* Theme Toggle */}
+      <ThemeToggle />
     </footer>
   );
 };

@@ -1,14 +1,71 @@
-
-import React from 'react';
-import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { usePlanContext } from '@/contexts/PlanContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import AuthModal from '@/components/AuthModal';
+import ToursDrawer from '@/components/ToursDrawer';
 
 const PlanNavagioBeach = () => {
-  const addToPlan = (slug: string) => {
-    console.log(`Adding ${slug} to travel plan`);
-    // Future implementation for saving to user's travel plan
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isToursDrawerOpen, setIsToursDrawerOpen] = useState(false);
+  const { addToPlan, removeFromPlan, isInPlan } = usePlanContext();
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const beachSlug = 'navagio-beach';
+  const beachName = 'Navagio Beach';
+  const isPlanned = isInPlan(beachSlug);
+
+  const activities = [
+    {
+      id: '1',
+      name: 'Shipwreck Bay Boat Tour',
+      duration: '3 hours',
+      price: 45,
+      description: 'Classic boat tour to Navagio Beach with swimming time and photo opportunities around the famous shipwreck.',
+      bookingUrl: 'https://example.com/book-boat-tour'
+    },
+    {
+      id: '2',
+      name: 'Blue Caves & Navagio Combo',
+      duration: '5 hours',
+      price: 65,
+      description: 'Combined tour visiting the stunning Blue Caves and Navagio Beach with snorkeling equipment included.',
+      bookingUrl: 'https://example.com/book-combo'
+    },
+    {
+      id: '3',
+      name: 'Cliff-Top Photography Tour',
+      duration: '2 hours',
+      price: 35,
+      description: 'Guided photography tour to the best viewpoints above Navagio Beach for spectacular aerial shots.',
+      bookingUrl: 'https://example.com/book-photography'
+    }
+  ];
+
+  const handlePlanToggle = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    if (isPlanned) {
+      removeFromPlan(beachSlug);
+      toast({
+        title: "Removed from your plan",
+        description: `${beachName} has been removed from your travel plan.`,
+      });
+    } else {
+      addToPlan(beachSlug);
+      toast({
+        title: "Ready! Navagio Beach added to your plan.",
+        description: "Start planning your Greek island adventure.",
+      });
+    }
   };
 
   return (
@@ -238,13 +295,31 @@ const PlanNavagioBeach = () => {
                 </div>
 
                 <Button 
-                  onClick={() => addToPlan('/plan/navagio-beach')}
-                  className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
+                  onClick={handlePlanToggle}
+                  variant={isPlanned ? "default" : "outline"}
+                  className={`w-full ${isPlanned 
+                    ? 'bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white' 
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
                 >
-                  Add to My Plan
+                  {isPlanned ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Added
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add to My Plan
+                    </>
+                  )}
                 </Button>
                 
-                <Button variant="outline" className="w-full">
+                <Button 
+                  onClick={() => setIsToursDrawerOpen(true)}
+                  variant="outline" 
+                  className="w-full"
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
                   Book Boat Tours
                 </Button>
@@ -289,6 +364,19 @@ const PlanNavagioBeach = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals and Drawers */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+      
+      <ToursDrawer
+        isOpen={isToursDrawerOpen}
+        onClose={() => setIsToursDrawerOpen(false)}
+        beachName={beachName}
+        activities={activities}
+      />
     </div>
   );
 };

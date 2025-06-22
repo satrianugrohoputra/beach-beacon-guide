@@ -1,14 +1,71 @@
-
-import React from 'react';
-import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import { usePlanContext } from '@/contexts/PlanContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
+import AuthModal from '@/components/AuthModal';
+import ToursDrawer from '@/components/ToursDrawer';
 
 const PlanWhitehavenBeach = () => {
-  const addToPlan = (slug: string) => {
-    console.log(`Adding ${slug} to travel plan`);
-    // Future implementation for saving to user's travel plan
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isToursDrawerOpen, setIsToursDrawerOpen] = useState(false);
+  const { addToPlan, removeFromPlan, isInPlan } = usePlanContext();
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
+
+  const beachSlug = 'whitehaven-beach';
+  const beachName = 'Whitehaven Beach';
+  const isPlanned = isInPlan(beachSlug);
+
+  const activities = [
+    {
+      id: '1',
+      name: 'Hill Inlet Scenic Flight',
+      duration: '45 minutes',
+      price: 180,
+      description: 'Helicopter tour over the swirling sands of Hill Inlet with aerial photography stops and champagne service.',
+      bookingUrl: 'https://example.com/book-helicopter'
+    },
+    {
+      id: '2',
+      name: 'Sailing Charter Full Day',
+      duration: '8 hours',
+      price: 220,
+      description: 'Luxury catamaran sailing with snorkeling gear, gourmet lunch, and sunset views over the Whitsundays.',
+      bookingUrl: 'https://example.com/book-sailing'
+    },
+    {
+      id: '3',
+      name: 'Bushwalking & Beach Picnic',
+      duration: '4 hours',
+      price: 95,
+      description: 'Guided nature walk through ancient rainforest followed by a gourmet picnic on pristine silica sand.',
+      bookingUrl: 'https://example.com/book-bushwalk'
+    }
+  ];
+
+  const handlePlanToggle = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    if (isPlanned) {
+      removeFromPlan(beachSlug);
+      toast({
+        title: "Removed from your plan",
+        description: `${beachName} has been removed from your travel plan.`,
+      });
+    } else {
+      addToPlan(beachSlug);
+      toast({
+        title: "Ready! Whitehaven Beach added to your plan.",
+        description: "Start planning your perfect Australian adventure.",
+      });
+    }
   };
 
   return (
@@ -238,15 +295,33 @@ const PlanWhitehavenBeach = () => {
                 </div>
 
                 <Button 
-                  onClick={() => addToPlan('/plan/whitehaven-beach')}
-                  className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
+                  onClick={handlePlanToggle}
+                  variant={isPlanned ? "default" : "outline"}
+                  className={`w-full ${isPlanned 
+                    ? 'bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white' 
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
                 >
-                  Add to My Plan
+                  {isPlanned ? (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Added
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add to My Plan
+                    </>
+                  )}
                 </Button>
                 
-                <Button variant="outline" className="w-full">
+                <Button 
+                  onClick={() => setIsToursDrawerOpen(true)}
+                  variant="outline" 
+                  className="w-full"
+                >
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Book Sailing Tours
+                  Book Tours & Activities
                 </Button>
               </CardContent>
             </Card>
@@ -289,6 +364,19 @@ const PlanWhitehavenBeach = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals and Drawers */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+      
+      <ToursDrawer
+        isOpen={isToursDrawerOpen}
+        onClose={() => setIsToursDrawerOpen(false)}
+        beachName={beachName}
+        activities={activities}
+      />
     </div>
   );
 };
