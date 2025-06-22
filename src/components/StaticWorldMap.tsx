@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Map, X } from 'lucide-react';
 import { Beach } from '../types/Beach';
@@ -30,6 +29,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     'Indian Ocean': (beach: Beach) => beach.coordinates.lat >= -40 && beach.coordinates.lat <= 20 && beach.coordinates.lng >= 40 && beach.coordinates.lng <= 100
   };
 
+  // Use the beaches prop directly (already filtered by categories) and only apply region filter on top
   const filteredBeaches = activeRegion === 'All Regions' 
     ? beaches 
     : beaches.filter(regions[activeRegion as keyof typeof regions]);
@@ -57,6 +57,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
   const handlePinClick = (beach: Beach, event: React.MouseEvent) => {
     event.stopPropagation();
     console.log('Pin clicked for beach:', beach.name);
+    console.log('Beach categories:', beach.categories);
     
     const containerRect = containerRef.current?.getBoundingClientRect();
     const svgRect = mapRef.current?.getBoundingClientRect();
@@ -128,6 +129,16 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     closePopup();
   };
 
+  // Reset region filter when beaches prop changes (when category filters change)
+  useEffect(() => {
+    console.log('Beaches prop changed, total beaches:', beaches.length);
+    console.log('Filtered beaches for map:', filteredBeaches.length);
+    // Reset to "All Regions" when category filters change to show all matching beaches
+    if (activeRegion !== 'All Regions') {
+      setActiveRegion('All Regions');
+    }
+  }, [beaches.length]);
+
   // Close popup on Escape key
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -187,6 +198,9 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
               {region}
             </button>
           ))}
+        </div>
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Showing {filteredBeaches.length} of {beaches.length} beaches matching your filters
         </div>
       </div>
       
