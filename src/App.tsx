@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/toaster';
 import { PlanProvider } from '@/contexts/PlanContext';
+import ThemeToggle from '@/components/ThemeToggle';
 import Index from './pages/Index';
 import About from './pages/About';
 import Team from './pages/Team';
@@ -35,6 +36,8 @@ function App() {
                 <Route path="/plan/navagio-beach" element={<PlanNavagioBeach />} />
                 <Route path="*" element={<Custom404Page />} />
               </Routes>
+              {/* Global Theme Toggle - appears on all pages */}
+              <ThemeToggle />
             </div>
           </Router>
           <Toaster />

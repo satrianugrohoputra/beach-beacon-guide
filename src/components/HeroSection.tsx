@@ -7,20 +7,20 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onExploreClick }: HeroSectionProps) => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="w-full h-screen overflow-hidden relative">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80)'
         }}
       />
       
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-25"></div>
       
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-4xl">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4 max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-lg">
           Discover the World's Most
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-teal-200">

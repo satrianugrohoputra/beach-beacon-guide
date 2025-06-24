@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, Linkedin } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
 const Footer = () => {
   return (
@@ -103,9 +102,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-
-      {/* Theme Toggle */}
-      <ThemeToggle />
     </footer>
   );
 };
