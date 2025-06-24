@@ -69,7 +69,7 @@ const PlanGraceBay = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
       {/* Navigation */}
       <div className="container mx-auto px-4 py-4">
         <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
