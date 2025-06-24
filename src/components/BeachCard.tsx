@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Beach } from '../types/Beach';
-import { Star, Sun, MapPin, Waves, Quote, ExternalLink, Heart, Shield, Camera } from 'lucide-react';
+import { Star, MapPin, Waves, Quote, ExternalLink, Heart, Shield, Camera } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface BeachCardProps {
@@ -24,7 +24,7 @@ const BeachCard = ({ beach }: BeachCardProps) => {
       case 'Adventure':
         return <MapPin className="w-4 h-4" />;
       default:
-        return <Sun className="w-4 h-4" />;
+        return <Star className="w-4 h-4" />;
     }
   };
 
@@ -144,18 +144,13 @@ const BeachCard = ({ beach }: BeachCardProps) => {
           </div>
         </div>
         
-        <div className="flex space-x-2">
-          <Link 
-            to={beach.planLink} 
-            className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200 flex items-center justify-center"
-          >
-            <ExternalLink className="w-4 h-4 mr-2" />
-            Plan Visit
-          </Link>
-          <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <Sun className="w-4 h-4 text-orange-500" />
-          </button>
-        </div>
+        <Link 
+          to={beach.planLink} 
+          className="w-full bg-gradient-to-r from-blue-500 to-teal-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-teal-600 transition-all duration-200 flex items-center justify-center"
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          Plan Visit
+        </Link>
         
         <p className="text-xs text-gray-500 mt-2 text-center">{beach.planText}</p>
       </div>

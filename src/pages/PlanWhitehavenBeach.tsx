@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -47,6 +47,49 @@ const PlanWhitehavenBeach = () => {
     }
   ];
 
+  const tideData = [
+    { day: 'Today', tide: 'Low: 11:45 AM', waveHeight: 0.8, status: 'Safe' },
+    { day: 'Tomorrow', tide: 'Low: 12:30 PM', waveHeight: 1.1, status: 'Safe' },
+    { day: 'Thursday', tide: 'Low: 1:15 PM', waveHeight: 1.6, status: 'Caution' },
+    { day: 'Friday', tide: 'Low: 2:00 PM', waveHeight: 0.7, status: 'Safe' }
+  ];
+
+  const localEvents = [
+    {
+      title: 'Whitsunday Sailing Week',
+      date: 'August 5-12',
+      description: 'Annual regatta with world-class yacht racing',
+    },
+    {
+      title: 'Hill Inlet Photography Workshop',
+      date: 'August 18',
+      description: 'Professional landscape photography masterclass',
+    },
+    {
+      title: 'Marine Conservation Talk',
+      date: 'August 22',
+      description: 'Educational session about Great Barrier Reef protection',
+    },
+    {
+      title: 'Bushwalking Tour',
+      date: 'Every Saturday',
+      description: 'Guided nature walks through ancient rainforest',
+    }
+  ];
+
+  const getWaveStatusColor = (status: string) => {
+    switch (status) {
+      case 'Safe':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'Caution':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'High Risk':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+  };
+
   const handlePlanToggle = () => {
     if (!isAuthenticated) {
       setIsAuthModalOpen(true);
@@ -66,6 +109,18 @@ const PlanWhitehavenBeach = () => {
         description: "Start planning your perfect Australian adventure.",
       });
     }
+  };
+
+  const handleAddEventToPlan = (eventTitle: string) => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
+    toast({
+      title: "Event added to plan!",
+      description: `${eventTitle} has been added to your itinerary.`,
+    });
   };
 
   return (
@@ -236,6 +291,73 @@ const PlanWhitehavenBeach = () => {
                 <p className="text-gray-600 mt-4">
                   The Whitsundays region celebrates its maritime heritage through the annual Airlie Beach Festival of Music in November, where indigenous didgeridoo performances and contemporary Australian music create a soundtrack to your tropical adventure. Local Aboriginal culture is honored through guided walks that share traditional knowledge about the land and sea connections.
                 </p>
+              </CardContent>
+            </Card>
+
+            {/* Tide & Wave Forecast */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Waves className="w-5 h-5 mr-2 text-blue-500" />
+                  🌊 Tide & Wave Forecast
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {tideData.map((data, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="font-medium">{data.day}</span>
+                      <span className="text-indigo-500">{data.tide}</span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getWaveStatusColor(data.status)}`}>
+                        {data.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                  Insider tip: plan your Hill Inlet visit during low tide for the most dramatic swirling sand patterns.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Local Events Calendar */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-purple-500" />
+                  🎉 Local Events Calendar
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {localEvents.map((event, index) => (
+                    <div key={index} className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">{event.title}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {event.date} – {event.description}
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => handleAddEventToPlan(event.title)}
+                        className="text-teal-500 hover:underline text-sm whitespace-nowrap ml-4"
+                      >
+                        Add to Plan
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  className="mt-4 w-full bg-teal-500 text-white hover:bg-teal-600"
+                  onClick={() => {
+                    toast({
+                      title: "Coming Soon!",
+                      description: "Full calendar feature is being developed.",
+                    });
+                  }}
+                >
+                  View Full Calendar
+                </Button>
               </CardContent>
             </Card>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check } from 'lucide-react';
+import { ArrowLeft, MapPin, Clock, Sun, Utensils, Info, Calendar, ExternalLink, Plus, Check, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
@@ -47,6 +47,49 @@ const PlanNavagioBeach = () => {
     }
   ];
 
+  const tideData = [
+    { day: 'Today', tide: 'High: 1:45 PM', waveHeight: 1.3, status: 'Safe' },
+    { day: 'Tomorrow', tide: 'High: 2:30 PM', waveHeight: 2.2, status: 'Caution' },
+    { day: 'Thursday', tide: 'High: 3:15 PM', waveHeight: 1.0, status: 'Safe' },
+    { day: 'Friday', tide: 'High: 4:00 PM', waveHeight: 2.8, status: 'High Risk' }
+  ];
+
+  const localEvents = [
+    {
+      title: 'Zakynthos Wine Festival',
+      date: 'September 8-10',
+      description: 'Traditional wine tasting with local varieties',
+    },
+    {
+      title: 'Blue Caves Photography Contest',
+      date: 'September 15',
+      description: 'Annual competition showcasing island beauty',
+    },
+    {
+      title: 'Traditional Greek Night',
+      date: 'September 22',
+      description: 'Folk dancing and authentic cuisine in Zakynthos Town',
+    },
+    {
+      title: 'Boat Tour Special',
+      date: 'Every Sunday',
+      description: 'Discounted combined Blue Caves and Navagio tours',
+    }
+  ];
+
+  const getWaveStatusColor = (status: string) => {
+    switch (status) {
+      case 'Safe':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'Caution':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'High Risk':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+  };
+
   const handlePlanToggle = () => {
     if (!isAuthenticated) {
       setIsAuthModalOpen(true);
@@ -66,6 +109,18 @@ const PlanNavagioBeach = () => {
         description: "Start planning your Greek island adventure.",
       });
     }
+  };
+
+  const handleAddEventToPlan = (eventTitle: string) => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    
+    toast({
+      title: "Event added to plan!",
+      description: `${eventTitle} has been added to your itinerary.`,
+    });
   };
 
   return (
@@ -236,6 +291,73 @@ const PlanNavagioBeach = () => {
                 <p className="text-gray-600 mt-4">
                   Zakynthos celebrates its patron saint, Agios Dionysios, every August with a week-long festival featuring traditional music, dancing, and religious processions through cobblestone streets. The island's rich Venetian and British colonial history creates a unique cultural blend visible in architecture, language, and customs that distinguish it from other Greek islands.
                 </p>
+              </CardContent>
+            </Card>
+
+            {/* Tide & Wave Forecast */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Waves className="w-5 h-5 mr-2 text-blue-500" />
+                  🌊 Tide & Wave Forecast
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {tideData.map((data, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <span className="font-medium">{data.day}</span>
+                      <span className="text-indigo-500">{data.tide}</span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getWaveStatusColor(data.status)}`}>
+                        {data.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                  Insider tip: plan your boat trip when waves are below 1.5m for calm conditions and easier beach access.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Local Events Calendar */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-purple-500" />
+                  🎉 Local Events Calendar
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {localEvents.map((event, index) => (
+                    <div key={index} className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">{event.title}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {event.date} – {event.description}
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => handleAddEventToPlan(event.title)}
+                        className="text-teal-500 hover:underline text-sm whitespace-nowrap ml-4"
+                      >
+                        Add to Plan
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  className="mt-4 w-full bg-teal-500 text-white hover:bg-teal-600"
+                  onClick={() => {
+                    toast({
+                      title: "Coming Soon!",
+                      description: "Full calendar feature is being developed.",
+                    });
+                  }}
+                >
+                  View Full Calendar
+                </Button>
               </CardContent>
             </Card>
           </div>
