@@ -15,4 +15,5 @@ Discover your perfect beach getaway! A web app that helps you explore beaches wi
 
 ### 🛠️ Tech Stack
 Frontend: Next.js, React, Tailwind CSS
+
 Deployment: Vercel
