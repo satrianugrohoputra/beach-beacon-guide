@@ -5,6 +5,7 @@ Discover your perfect beach getaway! A web app that helps you explore beaches wi
 
 ## ✨ Features
 • Search & Filter beaches by name, location, or activities (e.g., surfing, family-friendly).
+
 • Interactive Map (if applicable) or location-based listings.
 
 • Responsive Design – works on mobile & desktop.
