@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Map, X } from 'lucide-react';
 import { Beach } from '../types/Beach';
@@ -34,17 +35,12 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     ? beaches 
     : beaches.filter(regions[activeRegion as keyof typeof regions]);
 
-  // Convert lat/lng to SVG coordinates (simplified Mercator projection)
+  // Convert lat/lng to SVG coordinates - Fixed static positioning
   const coordsToSVG = (lat: number, lng: number) => {
-    // Map longitude (-180 to 180) to SVG width (0 to 800)
-    const x = ((lng + 180) / 360) * 800;
-    
-    // Map latitude (85 to -85) to SVG height (0 to 400) with Mercator-like projection
-    const latRad = (lat * Math.PI) / 180;
-    const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-    const y = 200 - (mercN * 400) / (2 * Math.PI);
-    
-    return { x: Math.max(0, Math.min(800, x)), y: Math.max(0, Math.min(400, y)) };
+    // Ensure coordinates are always calculated the same way for static positioning
+    const x = Math.max(0, Math.min(800, ((lng + 180) / 360) * 800));
+    const y = Math.max(0, Math.min(400, 200 - (lat / 90) * 200));
+    return { x, y };
   };
 
   const getPinColor = (beach: Beach) => {
@@ -57,7 +53,6 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
   const handlePinClick = (beach: Beach, event: React.MouseEvent) => {
     event.stopPropagation();
     console.log('Pin clicked for beach:', beach.name);
-    console.log('Beach categories:', beach.categories);
     
     const containerRect = containerRef.current?.getBoundingClientRect();
     const svgRect = mapRef.current?.getBoundingClientRect();
@@ -68,12 +63,11 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     }
 
     const coords = coordsToSVG(beach.coordinates.lat, beach.coordinates.lng);
-    // Calculate position relative to the container with better positioning
+    // Calculate position relative to the container
     const x = (coords.x / 800) * svgRect.width + (svgRect.left - containerRect.left);
-    const y = (coords.y / 400) * svgRect.height + (svgRect.top - containerRect.top) - 60; // Move popup higher
+    const y = (coords.y / 400) * svgRect.height + (svgRect.top - containerRect.top) - 80; // Position popup above the pin
 
     console.log('Setting popup position:', { x, y });
-    console.log('Beach name being displayed:', beach.name);
     
     setActivePopup({
       beach,
@@ -83,7 +77,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     // Call the beach selection handler
     onBeachSelect(beach);
     
-    // Enhanced scrolling with better timing
+    // Scroll to beach card
     setTimeout(() => {
       const beachCard = document.getElementById(`beach-${beach.id}`);
       console.log('Attempting to scroll to beach card:', `beach-${beach.id}`, beachCard);
@@ -94,30 +88,8 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
           inline: 'nearest'
         });
         console.log('Scrolled to beach card for:', beach.name);
-      } else {
-        console.log('Beach card not found for:', beach.name);
       }
     }, 200);
-  };
-
-  const handlePinKeyDown = (beach: Beach, event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      const target = event.target as HTMLElement;
-      const rect = target.getBoundingClientRect();
-      const containerRect = containerRef.current?.getBoundingClientRect();
-      
-      if (containerRect) {
-        setActivePopup({
-          beach,
-          position: { 
-            x: rect.left - containerRect.left + rect.width / 2, 
-            y: rect.top - containerRect.top - 60 
-          }
-        });
-        onBeachSelect(beach);
-      }
-    }
   };
 
   const closePopup = () => {
@@ -129,11 +101,10 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     closePopup();
   };
 
-  // Reset region filter when beaches prop changes (when category filters change)
+  // Reset region filter when beaches prop changes
   useEffect(() => {
     console.log('Beaches prop changed, total beaches:', beaches.length);
     console.log('Filtered beaches for map:', filteredBeaches.length);
-    // Reset to "All Regions" when category filters change to show all matching beaches
     if (activeRegion !== 'All Regions') {
       setActiveRegion('All Regions');
     }
@@ -204,41 +175,41 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
         </div>
       </div>
       
-      {/* SVG Map Container */}
-      <div className="relative h-96 bg-yellow-50 dark:bg-gray-700 overflow-visible">
+      {/* SVG Map Container - Static positioning */}
+      <div className="relative h-96 bg-gradient-to-br from-blue-200 to-blue-300 dark:bg-gradient-to-br dark:from-gray-700 dark:to-gray-800 overflow-visible">
         <svg
           ref={mapRef}
           viewBox="0 0 800 400"
           className="w-full h-full"
           style={{ background: 'transparent' }}
         >
-          {/* World Map Background */}
+          {/* World Map Background - Static continents */}
           <defs>
             <pattern id="water" patternUnits="userSpaceOnUse" width="4" height="4">
               <rect width="4" height="4" fill="#D0F0F8" className="dark:fill-gray-800" />
             </pattern>
           </defs>
           
-          {/* Simplified world map shapes */}
+          {/* Simplified static world map shapes */}
           <rect width="800" height="400" fill="url(#water)" />
           
-          {/* Continents (simplified shapes) */}
-          <g fill="#EEE2CB" className="dark:fill-gray-600">
+          {/* Static continents (fixed positions) */}
+          <g fill="#8FBC8F" className="dark:fill-gray-600">
             {/* North America */}
-            <path d="M50,80 L200,70 L190,200 L60,190 Z" />
+            <path d="M80,100 L220,90 L210,220 L90,210 Z" />
             {/* South America */}
-            <path d="M120,200 L180,190 L160,350 L100,340 Z" />
+            <path d="M140,220 L200,210 L180,350 L120,340 Z" />
             {/* Europe */}
-            <path d="M350,60 L450,70 L440,150 L360,140 Z" />
+            <path d="M380,80 L480,85 L470,180 L390,175 Z" />
             {/* Africa */}
-            <path d="M380,150 L480,140 L470,300 L390,290 Z" />
+            <path d="M400,180 L500,175 L480,320 L410,315 Z" />
             {/* Asia */}
-            <path d="M450,50 L700,60 L690,200 L460,190 Z" />
+            <path d="M480,70 L720,75 L700,220 L490,215 Z" />
             {/* Australia */}
-            <path d="M580,280 L680,270 L670,320 L590,310 Z" />
+            <path d="M600,300 L720,295 L710,340 L610,335 Z" />
           </g>
           
-          {/* Beach Pins */}
+          {/* Static Beach Pins - Fixed positions */}
           {filteredBeaches.map((beach) => {
             const coords = coordsToSVG(beach.coordinates.lat, beach.coordinates.lng);
             const isSelected = selectedBeach?.id === beach.id;
@@ -249,7 +220,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
                   <circle
                     cx={coords.x}
                     cy={coords.y}
-                    r="15"
+                    r="18"
                     fill="none"
                     stroke="#f97316"
                     strokeWidth="3"
@@ -257,27 +228,24 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
                     opacity="0.6"
                   />
                 )}
-                {/* Enhanced pin with larger size */}
+                {/* Static pin with fixed position */}
                 <circle
                   cx={coords.x}
                   cy={coords.y}
-                  r="10"
+                  r="12"
                   fill={getPinColor(beach)}
                   stroke="white"
                   strokeWidth="3"
-                  className="cursor-pointer hover:scale-125 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 drop-shadow-lg"
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`${beach.name}, rating ${beach.rating}`}
+                  className="cursor-pointer hover:scale-110 transition-transform duration-200 drop-shadow-lg"
                   onClick={(e) => handlePinClick(beach, e)}
-                  onKeyDown={(e) => handlePinKeyDown(beach, e)}
                 />
+                {/* Beach emoji - static */}
                 <text
                   x={coords.x}
-                  y={coords.y + 3}
+                  y={coords.y + 4}
                   textAnchor="middle"
-                  className="text-sm fill-white font-bold pointer-events-none drop-shadow-sm"
-                  style={{ fontSize: '12px' }}
+                  className="text-xs fill-white font-bold pointer-events-none drop-shadow-sm"
+                  style={{ fontSize: '10px' }}
                 >
                   🏖️
                 </text>
@@ -286,10 +254,10 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
           })}
         </svg>
         
-        {/* Enhanced Popup with better styling */}
+        {/* Enhanced Popup with beach details */}
         {activePopup.beach && (
           <div
-            className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-2 border-blue-200 dark:border-blue-600 p-5 min-w-[280px] max-w-[320px] transform -translate-x-1/2"
+            className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border-2 border-blue-200 dark:border-blue-600 p-5 min-w-[300px] max-w-[350px] transform -translate-x-1/2"
             style={{
               left: `${activePopup.position.x}px`,
               top: `${activePopup.position.y}px`,
@@ -304,7 +272,7 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
               <X size={18} />
             </button>
             
-            {/* Beach Name - Made more prominent */}
+            {/* Beach Name */}
             <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-2 pr-8 leading-tight">
               {activePopup.beach.name}
             </h3>
@@ -326,6 +294,20 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 italic leading-relaxed">
               {activePopup.beach.tagline}
             </p>
+            
+            {/* Beach categories */}
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-1">
+                {activePopup.beach.categories.slice(0, 3).map((category) => (
+                  <span
+                    key={category}
+                    className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-xs font-medium"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            </div>
             
             <a
               href={activePopup.beach.planLink}
@@ -362,7 +344,6 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
           <span className="text-gray-600 dark:text-gray-400">{filteredBeaches.length} beaches shown</span>
         </div>
         
-        {/* Fallback message */}
         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           Click any beach pin to see details and highlight it in the list below
         </div>
