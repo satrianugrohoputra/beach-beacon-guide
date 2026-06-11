@@ -43,6 +43,36 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
     return { x, y };
   };
 
+  // Build an SVG path from an array of [lng, lat] points using the same
+  // equirectangular projection as the pins, so land lines up with markers.
+  const geoPath = (points: [number, number][]) => {
+    return points
+      .map(([lng, lat], i) => {
+        const { x, y } = coordsToSVG(lat, lng);
+        return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`;
+      })
+      .join(' ') + ' Z';
+  };
+
+  // Recognizable continent outlines defined in real geo coordinates
+  const continents: [number, number][][] = [
+    // North America
+    [[-168, 65], [-150, 70], [-128, 70], [-95, 72], [-80, 62], [-64, 60], [-56, 50], [-66, 45], [-70, 41], [-81, 25], [-97, 18], [-105, 22], [-112, 30], [-124, 40], [-130, 54], [-140, 60], [-168, 65]],
+    // South America
+    [[-80, 9], [-66, 11], [-50, 0], [-35, -7], [-39, -16], [-48, -25], [-58, -35], [-66, -45], [-74, -52], [-72, -42], [-71, -30], [-72, -18], [-78, -5], [-80, 4], [-80, 9]],
+    // Africa
+    [[-17, 21], [-5, 31], [10, 33], [25, 32], [33, 31], [43, 12], [51, 12], [42, -2], [40, -16], [33, -27], [25, -34], [18, -34], [12, -18], [9, -5], [8, 5], [-7, 5], [-16, 12], [-17, 21]],
+    // Europe
+    [[-10, 36], [-9, 43], [-2, 44], [3, 51], [12, 54], [20, 54], [30, 60], [28, 70], [18, 69], [10, 60], [2, 56], [-5, 49], [-10, 43], [-10, 36]],
+    // Asia
+    [[28, 60], [50, 68], [80, 73], [110, 75], [140, 72], [160, 67], [178, 66], [160, 60], [142, 52], [145, 45], [130, 35], [122, 28], [108, 20], [95, 13], [80, 8], [73, 22], [60, 25], [50, 40], [40, 48], [30, 52], [28, 60]],
+    // India peninsula
+    [[68, 24], [78, 20], [80, 10], [77, 8], [72, 17], [68, 24]],
+    // Australia
+    [[114, -22], [124, -15], [132, -12], [142, -11], [150, -25], [148, -38], [138, -38], [128, -32], [115, -34], [113, -28], [114, -22]],
+  ];
+
+
   const getPinColor = (beach: Beach) => {
     if (selectedBeach?.id === beach.id) return '#f97316'; // orange-500 for selected
     if (beach.rating >= 95) return '#10b981'; // green-500
