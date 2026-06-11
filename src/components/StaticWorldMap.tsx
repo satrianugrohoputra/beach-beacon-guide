@@ -215,29 +215,42 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
         >
           {/* World Map Background - Static continents */}
           <defs>
-            <pattern id="water" patternUnits="userSpaceOnUse" width="4" height="4">
-              <rect width="4" height="4" fill="#D0F0F8" className="dark:fill-gray-800" />
-            </pattern>
+            <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#bfe9f5" className="[stop-color:#bfe9f5] dark:[stop-color:#1f2937]" />
+              <stop offset="100%" stopColor="#8fd3ec" className="[stop-color:#8fd3ec] dark:[stop-color:#111827]" />
+            </linearGradient>
+            <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#9bd3a0" />
+              <stop offset="100%" stopColor="#7bbf86" />
+            </linearGradient>
           </defs>
-          
-          {/* Simplified static world map shapes */}
-          <rect width="800" height="400" fill="url(#water)" />
-          
-          {/* Static continents (fixed positions) */}
-          <g fill="#8FBC8F" className="dark:fill-gray-600">
-            {/* North America */}
-            <path d="M80,100 L220,90 L210,220 L90,210 Z" />
-            {/* South America */}
-            <path d="M140,220 L200,210 L180,350 L120,340 Z" />
-            {/* Europe */}
-            <path d="M380,80 L480,85 L470,180 L390,175 Z" />
-            {/* Africa */}
-            <path d="M400,180 L500,175 L480,320 L410,315 Z" />
-            {/* Asia */}
-            <path d="M480,70 L720,75 L700,220 L490,215 Z" />
-            {/* Australia */}
-            <path d="M600,300 L720,295 L710,340 L610,335 Z" />
+
+          {/* Ocean background */}
+          <rect width="800" height="400" fill="url(#ocean)" />
+
+          {/* Subtle latitude/longitude grid */}
+          <g stroke="#ffffff" strokeOpacity="0.18" strokeWidth="0.75">
+            {[100, 200, 300].map((y) => (
+              <line key={`h${y}`} x1="0" y1={y} x2="800" y2={y} />
+            ))}
+            {[160, 320, 480, 640].map((x) => (
+              <line key={`v${x}`} x1={x} y1="0" x2={x} y2="400" />
+            ))}
           </g>
+
+          {/* Recognizable continents (geo-accurate, aligned with pins) */}
+          <g
+            fill="url(#land)"
+            stroke="#5c9e69"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            className="dark:fill-gray-600 dark:stroke-gray-500"
+          >
+            {continents.map((points, i) => (
+              <path key={i} d={geoPath(points)} />
+            ))}
+          </g>
+
           
           {/* Static Beach Pins - Fixed positions */}
           {filteredBeaches.map((beach) => {
