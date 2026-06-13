@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import FilterBar from '@/components/FilterBar';
 import StaticWorldMap from '@/components/StaticWorldMap';
+import LeafletBeachMap from '@/components/LeafletBeachMap';
 import BeachGrid from '@/components/BeachGrid';
 import { Beach } from '@/types/Beach';
 import { beaches } from '@/data/beaches';
@@ -63,6 +64,15 @@ const BeachesSection = () => {
       {/* Static World Map */}
       <div className="mb-8">
         <StaticWorldMap 
+          beaches={filteredBeaches}
+          onBeachSelect={handleBeachSelect}
+          selectedBeach={selectedBeach}
+        />
+      </div>
+
+      {/* Live Leaflet Map */}
+      <div className="mb-8">
+        <LeafletBeachMap
           beaches={filteredBeaches}
           onBeachSelect={handleBeachSelect}
           selectedBeach={selectedBeach}
