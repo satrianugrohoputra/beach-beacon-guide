@@ -13,7 +13,9 @@ import Signup from './pages/Signup';
 import PlanGraceBay from './pages/PlanGraceBay';
 import PlanWhitehavenBeach from './pages/PlanWhitehavenBeach';
 import PlanNavagioBeach from './pages/PlanNavagioBeach';
+import PlanBeach from './pages/PlanBeach';
 import Custom404Page from './pages/Custom404Page';
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -24,6 +26,7 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <PlanProvider>
           <Router>
+            <ScrollToTop />
             <div className="min-h-screen bg-background text-foreground">
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -34,6 +37,7 @@ function App() {
                 <Route path="/plan/grace-bay" element={<PlanGraceBay />} />
                 <Route path="/plan/whitehaven-beach" element={<PlanWhitehavenBeach />} />
                 <Route path="/plan/navagio-beach" element={<PlanNavagioBeach />} />
+                <Route path="/plan/:slug" element={<PlanBeach />} />
                 <Route path="*" element={<Custom404Page />} />
               </Routes>
               {/* Global Theme Toggle - appears on all pages */}
