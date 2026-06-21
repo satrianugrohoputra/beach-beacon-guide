@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPin, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Beach } from '@/types/Beach';
 
 interface LeafletBeachMapProps {
@@ -80,12 +81,12 @@ const LeafletBeachMap = ({ beaches, onBeachSelect, selectedBeach }: LeafletBeach
                       <Star className="w-4 h-4 fill-current mr-1" />
                       <span>{beach.rating}/100</span>
                     </div>
-                    <a
-                      href={beach.planLink}
+                    <Link
+                      to={beach.planLink}
                       className="inline-block w-full text-center bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium px-3 py-1.5 rounded-md transition-colors"
                     >
                       Plan Visit
-                    </a>
+                    </Link>
                   </div>
                 </Popup>
               </CircleMarker>

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Map, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Beach } from '../types/Beach';
 
 interface StaticWorldMapProps {
@@ -352,13 +353,13 @@ const StaticWorldMap = ({ beaches, onBeachSelect, selectedBeach }: StaticWorldMa
               </div>
             </div>
             
-            <a
-              href={activePopup.beach.planLink}
+            <Link
+              to={activePopup.beach.planLink}
               className="inline-block bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 dark:from-blue-600 dark:to-teal-700 dark:hover:from-blue-700 dark:hover:to-teal-800 text-white px-5 py-3 rounded-lg text-sm font-medium transition-all duration-200 w-full text-center shadow-lg"
               onClick={(e) => e.stopPropagation()}
             >
               {activePopup.beach.planText || 'Plan Visit'} ✈️
-            </a>
+            </Link>
           </div>
         )}
       </div>
